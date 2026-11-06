@@ -93,7 +93,20 @@ jobs:
           npm test
           npm run build
       - name: Test
-        run: cargo test --workspace --locked
+        shell: pwsh
+        run: |
+          $log = Join-Path $env:RUNNER_TEMP "cargo-test.log"
+          cargo test --workspace --locked 2>&1 | Tee-Object -FilePath $log
+          if ($LASTEXITCODE -ne 0) {
+            Get-Content $log |
+              Where-Object { $_ -match "^(failures:|---- .* stdout ----|test result: FAILED)|panicked at|assertion.*failed|left:|right:" } |
+              Select-Object -First 30 |
+              ForEach-Object {
+                $message = $_ -replace "%", "%25" -replace "`r", "%0D" -replace "`n", "%0A"
+                Write-Output "::error title=Cargo test failure::$message"
+              }
+            exit 1
+          }
       - name: Audit npm dependencies
         working-directory: crates/mousetroke-settings/ui
         run: npm audit --omit=dev
