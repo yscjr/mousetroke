@@ -280,23 +280,23 @@ mod tests {
         let s = |x, y| Segment { x, y };
         assert_eq!(arrows(&[s(5, 0), s(1, 6), s(4, 0)]), "→ ↓ →");
         assert_eq!(arrows(&[s(-3, -3), s(0, -2)]), "↖ ↑");
-        assert_eq!(arrows(&[s(3, -1), s(1, -2)]), "→ ↑");
+        assert_eq!(arrows(&[s(3, -1), s(1, -4)]), "→ ↑");
         assert_eq!(arrows(&[]), "");
     }
 
     #[test]
     fn same_quadrant_near_axis_turns_stay_separate() {
-        let segs = denoise(&[Segment { x: 3, y: -1 }, Segment { x: 1, y: -2 }]);
+        let segs = denoise(&[Segment { x: 3, y: -1 }, Segment { x: 1, y: -4 }]);
         assert_eq!(
             segs,
-            vec![Segment { x: 3, y: -1 }, Segment { x: 1, y: -2 }]
+            vec![Segment { x: 3, y: -1 }, Segment { x: 1, y: -4 }]
         );
         assert_eq!(arrows(&segs), "→ ↑");
 
-        let tracked = tracker(&[(0.0, 0.0), (90.0, -24.0), (110.0, -90.0)]);
+        let tracked = tracker(&[(0.0, 0.0), (90.0, -24.0), (130.0, -144.0)]);
         assert_eq!(
             tracked,
-            vec![Segment { x: 3, y: -1 }, Segment { x: 1, y: -2 }]
+            vec![Segment { x: 3, y: -1 }, Segment { x: 1, y: -4 }]
         );
         assert_eq!(arrows(&tracked), "→ ↑");
 
@@ -304,8 +304,8 @@ mod tests {
             (0.0, 0.0),
             (0.0, -100.0),
             (90.0, -124.0),
-            (110.0, -190.0),
-            (110.0, -260.0),
+            (130.0, -244.0),
+            (130.0, -334.0),
         ]);
         assert_eq!(arrows(&denoise(&tracked)), "↑ → ↑");
     }
