@@ -52,4 +52,4 @@ O limite de alocação do Lua é 8 MiB. Não há tempo limite de execução de s
 
 ## Relatar um bug
 
-Use **Sobre → Comentários e sugestões → Abrir** ou as [Issues do GitHub](https://github.com/eiaao/mousetroke/issues). Inclua a versão do aplicativo, a versão do sistema operacional, o aplicativo afetado, o gesto e a ação, o resultado esperado e os passos para reproduzir. Anexe o log relevante de **Sobre → Abrir log** e uma configuração exportada mínima, se útil. Revise os anexos quanto a texto privado, títulos de janela, caminhos ou argumentos de comando antes de compartilhá-los.
+Use **Sobre → Comentários e sugestões → Abrir** ou as [Issues do GitHub](https://github.com/yscjr/mousetroke/issues). Inclua a versão do aplicativo, a versão do sistema operacional, o aplicativo afetado, o gesto e a ação, o resultado esperado e os passos para reproduzir. Anexe o log relevante de **Sobre → Abrir log** e uma configuração exportada mínima, se útil. Revise os anexos quanto a texto privado, títulos de janela, caminhos ou argumentos de comando antes de compartilhá-los.

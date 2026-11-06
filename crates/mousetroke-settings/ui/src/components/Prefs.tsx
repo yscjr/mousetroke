@@ -178,6 +178,16 @@ export function Prefs({
           unit=" px"
           onChange={(v) => onChange((x) => ({ ...x, min_stroke_px: v }), "stroke")}
         />
+        <Slider
+          label={t("ui.prefs.corner_filter")}
+          help={t("ui.prefs.corner_filter_help")}
+          value={s.corner_filter_percent ?? 50}
+          min={0}
+          max={100}
+          step={5}
+          unit="%"
+          onChange={(v) => onChange((x) => ({ ...x, corner_filter_percent: v }), "corner")}
+        />
         <div className="pref-row">
           <span className="pref-label">{t("ui.prefs.target_mode")}</span>
           <div className="segmented" role="radiogroup">

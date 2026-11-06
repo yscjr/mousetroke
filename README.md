@@ -1,13 +1,13 @@
 # Mousetroke
 
-[![CI](https://github.com/eiaao/mousetroke/actions/workflows/ci.yml/badge.svg)](https://github.com/eiaao/mousetroke/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/v/release/eiaao/mousetroke?include_prereleases)](https://github.com/eiaao/mousetroke/releases/latest) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Windows 10/11](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0098d9)
+[![CI](https://github.com/yscjr/mousetroke/actions/workflows/ci.yml/badge.svg)](https://github.com/yscjr/mousetroke/actions/workflows/ci.yml) [![Release](https://img.shields.io/github/v/release/yscjr/mousetroke?include_prereleases)](https://github.com/yscjr/mousetroke/releases/latest) [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![Windows 10/11](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0098d9)
 
 **Free, open-source mouse gestures for Windows and macOS (beta).** Hold the right button and draw — `←` goes
 back, `↓→` closes the tab, `↙` minimizes the window. Push the cursor into a screen corner for
 the Start menu, or scroll along the top edge to change the volume. A plain right-click still
 opens the context menu.
 
-**[Website](https://mousetroke.com/) · [Download](https://github.com/eiaao/mousetroke/releases/latest) · [简体中文](README.zh-CN.md)**
+**[Website](https://mousetroke.com/) · [Download](https://github.com/yscjr/mousetroke/releases/latest) · [简体中文](README.zh-CN.md)**
 
 Documentation / 文档: [User guide](docs/guide/en/index.md) · [使用指南](docs/guide/zh-CN/index.md)
 
@@ -25,7 +25,7 @@ Documentation / 文档: [User guide](docs/guide/en/index.md) · [使用指南](d
 
 ## Install
 
-1. Download `mousetroke.exe` from the [latest release](https://github.com/eiaao/mousetroke/releases/latest) and check its
+1. Download `mousetroke.exe` from the [latest release](https://github.com/yscjr/mousetroke/releases/latest) and check its
    SHA-256 against `SHA256SUMS.txt` on the same page.
 2. Double-click it. An icon appears in the notification area: left-click for settings,
    right-click to pause or quit. A short guide runs the first time.
@@ -59,7 +59,7 @@ Its changelog reads `CHANGELOG.md` from this repository's `main` branch on raw.g
 
 ## macOS beta
 
-[Download Mac beta](https://github.com/eiaao/mousetroke/releases/latest/download/Mousetroke.dmg):
+[Download Mac beta](https://github.com/yscjr/mousetroke/releases/latest/download/Mousetroke.dmg):
 macOS 11+, Apple silicon and Intel in one universal app. Compare its SHA-256 with the
 same release's `SHA256SUMS.txt` (which also lists the Windows exe).
 

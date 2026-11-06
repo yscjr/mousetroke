@@ -155,6 +155,8 @@ export interface Settings {
   drag_timeout_ms: number;
   drag_timeout_hint: boolean;
   min_stroke_px: number;
+  /** 拐角斜向过渡段过滤阈值（0–100%，0 = 关闭，缺省 = 50）。 */
+  corner_filter_percent?: number;
   target_mode: "under_cursor" | "focused";
   pause_hotkey: string;
   show_tray: boolean;

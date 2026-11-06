@@ -313,6 +313,12 @@ class MacShellCompatibilityTests(unittest.TestCase):
                                         text=True, capture_output=True, timeout=30)
                 self.assertEqual(result.returncode, 0, f"{name}: {result.stderr}")
 
+    def test_fork_release_workflow_does_not_require_macos_signing(self):
+        source = (ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
+        self.assertIn("runs-on: windows-latest", source)
+        self.assertNotIn("runs-on: macos-latest", source)
+        self.assertNotIn("MAC_SIGN_", source)
+
 
 @unittest.skipUnless(BASH, "Bash is required (Git Bash on Windows)")
 class MacPackagingTests(unittest.TestCase):
@@ -379,10 +385,6 @@ class MacPackagingTests(unittest.TestCase):
         else:
             self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
         return result
-
-    def workflow_step(self, name):
-        return next(code for label, code, _ in workflow_bash_blocks()
-                    if label == f"release.yml: {name}")
 
     def test_universal_bundle_replaces_old_resources_and_uses_apple_lipo_syntax(self):
         self.run_script("bundle", "--universal")
@@ -547,48 +549,6 @@ if message=$(mac_message mac.bundle.done); then exit 0; else exit 1; fi
             self.run_script("make-release-cert", certificate, success=False,
                             input="one\none\n", FAIL_OPENSSL="req")
             self.assertNotIn("openssl <pkcs12>", self.log.read_text())
-
-    def test_release_workflow_import_stops_on_tool_or_decode_failure(self):
-        runner = self.root / "runner"
-        runner.mkdir()
-        github_env = runner / "github-env"
-        for failure in [dict(FAIL_OPENSSL="rand"), dict(FAIL_SECURITY="list-keychains"),
-                        dict(FAIL_BASE64="1"), dict(FAIL_SECURITY="create-keychain"),
-                        dict(FAIL_SECURITY="import"), dict(FAIL_SECURITY="set-key-partition-list")]:
-            with self.subTest(failure=failure):
-                self.log.write_text("")
-                self.run_shell(self.workflow_step("Import stable release identity"), success=False,
-                               RUNNER_TEMP=runner.as_posix(), GITHUB_ENV=github_env.as_posix(),
-                               MAC_SIGN_P12_BASE64="fixture", MAC_SIGN_P12_PASSWORD="fixture", **failure)
-                self.assertNotIn("security <list-keychains> <-d> <user> <-s>", self.log.read_text())
-                self.assertFalse(github_env.exists())
-
-    def test_release_workflow_import_exports_identity_only_after_success(self):
-        runner = self.root / "runner"
-        runner.mkdir()
-        github_env = runner / "github-env"
-        self.run_shell(self.workflow_step("Import stable release identity"),
-                       RUNNER_TEMP=runner.as_posix(), GITHUB_ENV=github_env.as_posix(),
-                       MAC_SIGN_P12_BASE64="fixture", MAC_SIGN_P12_PASSWORD="fixture")
-        self.assertIn("MOUSETROKE_SIGN_ID=Mousetroke Self-Signed", github_env.read_text())
-        self.assertIn("security <import>", self.log.read_text())
-        self.assertFalse((runner / "mousetroke-release.p12").exists())
-
-    def test_release_workflow_cleanup_handles_empty_lists_and_preserves_failures(self):
-        runner = self.root / "runner"
-        runner.mkdir()
-        for keychains, failure in [("", {}), ('    "existing keychain"\n', {}),
-                                   ("", dict(FAIL_SECURITY="list-keychains")),
-                                   ("", dict(FAIL_SECURITY="delete-keychain"))]:
-            with self.subTest(keychains=keychains, failure=failure):
-                (runner / "mousetroke-keychains.txt").write_text(keychains, encoding="utf-8")
-                (runner / "mousetroke-release.keychain-db").touch()
-                (runner / "mousetroke-release.p12").touch()
-                self.run_shell(self.workflow_step("Delete temporary signing material"),
-                               success=not failure, RUNNER_TEMP=runner.as_posix(), **failure)
-                self.assertFalse((runner / "mousetroke-keychains.txt").exists())
-                self.assertFalse((runner / "mousetroke-release.p12").exists())
-                self.assertIn("security <delete-keychain>", self.log.read_text())
 
     def test_failed_bundle_cannot_feed_stale_app_into_dmg(self):
         self.run_script("bundle", "--universal", success=False, FAIL_CARGO="1")

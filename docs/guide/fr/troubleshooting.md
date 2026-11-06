@@ -52,4 +52,4 @@ Le bureau à distance, les machines virtuelles et les applications 3D/jeux peuve
 
 ## Signaler un bug
 
-Utilisez **À propos → Retours et suggestions → Ouvrir** ou les [GitHub Issues](https://github.com/eiaao/mousetroke/issues). Incluez la version de l’application, la version de l’OS, l’application concernée, le geste et l’action, le résultat attendu et les étapes de reproduction. Joignez le journal pertinent depuis **À propos → Ouvrir le journal** et une configuration exportée minimale si utile. Vérifiez les pièces jointes pour du texte privé, des titres de fenêtres, des chemins ou des arguments de commande avant de les partager.
+Utilisez **À propos → Retours et suggestions → Ouvrir** ou les [GitHub Issues](https://github.com/yscjr/mousetroke/issues). Incluez la version de l’application, la version de l’OS, l’application concernée, le geste et l’action, le résultat attendu et les étapes de reproduction. Joignez le journal pertinent depuis **À propos → Ouvrir le journal** et une configuration exportée minimale si utile. Vérifiez les pièces jointes pour du texte privé, des titres de fenêtres, des chemins ou des arguments de commande avant de les partager.

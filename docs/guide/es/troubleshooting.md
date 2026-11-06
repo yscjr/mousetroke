@@ -52,4 +52,4 @@ El escritorio remoto, las máquinas virtuales y las aplicaciones 3D o de juegos 
 
 ## Informar de un error
 
-Usa **Acerca de → Comentarios y sugerencias → Abrir** o [GitHub Issues](https://github.com/eiaao/mousetroke/issues). Incluye la versión de la aplicación, la versión del sistema operativo, la aplicación afectada, el gesto y la acción, el resultado esperado y los pasos para reproducirlo. Adjunta el registro pertinente desde **Acerca de → Abrir registro** y una configuración exportada mínima si resulta útil. Revisa los adjuntos en busca de texto privado, títulos de ventanas, rutas o argumentos de comandos antes de compartirlos.
+Usa **Acerca de → Comentarios y sugerencias → Abrir** o [GitHub Issues](https://github.com/yscjr/mousetroke/issues). Incluye la versión de la aplicación, la versión del sistema operativo, la aplicación afectada, el gesto y la acción, el resultado esperado y los pasos para reproducirlo. Adjunta el registro pertinente desde **Acerca de → Abrir registro** y una configuración exportada mínima si resulta útil. Revisa los adjuntos en busca de texto privado, títulos de ventanas, rutas o argumentos de comandos antes de compartirlos.

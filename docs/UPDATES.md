@@ -17,7 +17,7 @@ API 失败仍按原有方式处理。
 剥离 Markdown/HTML 后最多显示 12 条、每条 300 字符，不额外请求正文。
 API 只连接 HTTPS 的 `api.github.com`；下载及其每次跳转只允许 HTTPS 的 `github.com`、
 `objects.githubusercontent.com`、`release-assets.githubusercontent.com`，端口 443。
-正式标记地址为 `https://github.com/eiaao/mousetroke/releases/latest/download/latest.txt`，
+正式标记地址为 `https://github.com/yscjr/mousetroke/releases/latest/download/latest.txt`，
 沿用下载的 HTTPS 主机白名单、逐跳检查、User-Agent 和超时。标记响应上限为 64 字节，
 只接受 `vMAJOR.MINOR.PATCH`，末尾可有一个 LF 或 CRLF；其他空白、额外行和无效版本均拒绝。
 发布流程生成标签加一个 LF 的 `latest.txt`，逐字节校验后将它列入 `SHA256SUMS.txt` 并上传。

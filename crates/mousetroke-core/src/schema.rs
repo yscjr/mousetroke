@@ -468,6 +468,12 @@ pub struct Settings {
     pub drag_timeout_hint: bool,
     /// 轨迹最小识别距离(px)。
     pub min_stroke_px: u32,
+    /// 拐角斜向过渡段过滤阈值（两侧较短轴段的百分比，0 = 关闭）。
+    #[serde(
+        default = "default_corner_filter_percent",
+        skip_serializing_if = "is_default_corner_filter_percent"
+    )]
+    pub corner_filter_percent: u32,
     /// under_cursor（鼠标下窗口）| focused（活动窗口）。
     pub target_mode: TargetMode,
     /// 暂停/恢复热键（keyseq 语法）。
@@ -519,6 +525,7 @@ impl Default for Settings {
             drag_timeout_ms: 500,
             drag_timeout_hint: true,
             min_stroke_px: 30,
+            corner_filter_percent: default_corner_filter_percent(),
             target_mode: TargetMode::UnderCursor,
             pause_hotkey: "#({ESC})".into(),
             show_tray: true,
@@ -541,6 +548,14 @@ impl Default for Settings {
             },
         }
     }
+}
+
+fn default_corner_filter_percent() -> u32 {
+    crate::recognizer::DEFAULT_CORNER_FILTER_PERCENT
+}
+
+fn is_default_corner_filter_percent(value: &u32) -> bool {
+    *value == default_corner_filter_percent()
 }
 
 impl Default for Trail {
@@ -902,5 +917,20 @@ mod update_schema_tests {
         let copy: Config = serde_json::from_str(&serde_json::to_string(&cfg).unwrap()).unwrap();
         assert!(!copy.settings.update_check);
         assert!(!serde_json::from_str::<Config>(r#"{"settings":{"update_check":false}}"#).unwrap().settings.update_check);
+    }
+
+    #[test]
+    fn corner_filter_defaults_and_custom_value_round_trip() {
+        let mut cfg: Config = serde_json::from_str(r#"{"settings":{}}"#).unwrap();
+        assert_eq!(cfg.settings.corner_filter_percent, 50);
+        assert!(!cfg.to_json().contains("corner_filter_percent"));
+
+        cfg.settings.corner_filter_percent = 75;
+        let json = cfg.to_json();
+        assert!(json.contains(r#""corner_filter_percent": 75"#));
+        assert_eq!(
+            serde_json::from_str::<Config>(&json).unwrap().settings.corner_filter_percent,
+            75
+        );
     }
 }

@@ -671,6 +671,7 @@
     "drag_timeout_ms": 500,
     "drag_timeout_hint": true,
     "min_stroke_px": 30,
+    "corner_filter_percent": 50,
     "target_mode": "under_cursor",
     "pause_hotkey": "#({ESC})",
     "show_tray": true,

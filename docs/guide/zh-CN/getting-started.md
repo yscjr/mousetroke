@@ -8,7 +8,7 @@ order: 2
 
 ## 安装并打开
 
-Windows 用户从[最新版本](https://github.com/eiaao/mousetroke/releases/latest)下载 `mousetroke.exe`。这是便携版程序：放到准备长期保留的位置，双击即可运行。可将下载文件的 SHA-256 与该版本的 `SHA256SUMS.txt` 对照。
+Windows 用户从[最新版本](https://github.com/yscjr/mousetroke/releases/latest)下载 `mousetroke.exe`。这是便携版程序：放到准备长期保留的位置，双击即可运行。可将下载文件的 SHA-256 与该版本的 `SHA256SUMS.txt` 对照。
 
 支持 Windows 10 1809 及以上、Windows 11，均为 64 位。设置窗口需要 Microsoft Edge WebView2，Windows 11 已内置。程序暂未做代码签名；首次启动若被 SmartScreen 拦截，确认来自官方发布页后，选择“更多信息 → 仍要运行”。
 

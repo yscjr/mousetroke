@@ -635,7 +635,11 @@ impl Engine {
         let steps = cap.candidates(Some(key), false);
         let path = cap.trace_at.is_some().then_some(self.path.as_slice());
         // 含 Shape 的滚轮组合也必须等释放，避免绕过 after_input 的提前执行保护。
-        if let Some(b) = self.match_steps(&steps, &self.tracker.strokes(), path)
+        if let Some(b) = self.match_steps(
+            &steps,
+            &self.tracker.strokes_with_corner_filter(self.cfg.settings.corner_filter_percent),
+            path,
+        )
             .filter(|b| !b.pattern.iter().any(|s| matches!(s, Step::Shape { .. }))) {
             if let Some(cap) = &mut self.capture {
                 cap.consumed = true;
@@ -848,7 +852,7 @@ impl Engine {
     fn after_input(&mut self) {
         let Some(cap) = &self.capture else { return };
         let steps = cap.candidates(None, false);
-        let segs = self.tracker.strokes();
+        let segs = self.tracker.strokes_with_corner_filter(self.cfg.settings.corner_filter_percent);
         let path = cap.trace_at.is_some().then_some(self.path.as_slice());
         let hit = self.match_steps(&steps, &segs, path);
         if let Some(b) = &hit {
@@ -943,7 +947,7 @@ impl Engine {
 
     fn finish_gesture(&mut self, cap: Capture) {
         self.log_shape_sample(&cap);
-        let segs = self.tracker.strokes();
+        let segs = self.tracker.strokes_with_corner_filter(self.cfg.settings.corner_filter_percent);
         let steps = cap.candidates(None, false);
         let path = cap.trace_at.is_some().then_some(self.path.as_slice());
         match self.match_steps(&steps, &segs, path) {

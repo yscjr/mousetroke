@@ -8,7 +8,7 @@ order: 2
 
 ## 설치와 실행
 
-Windows에서는 [최신 릴리스](https://github.com/eiaao/mousetroke/releases/latest)에서 `mousetroke.exe`를 다운로드하세요. 포터블 실행 파일이므로 보관할 위치에 저장하고 두 번 클릭하면 됩니다. 다운로드한 파일의 SHA-256을 해당 릴리스 페이지의 `SHA256SUMS.txt`와 비교해 보세요.
+Windows에서는 [최신 릴리스](https://github.com/yscjr/mousetroke/releases/latest)에서 `mousetroke.exe`를 다운로드하세요. 포터블 실행 파일이므로 보관할 위치에 저장하고 두 번 클릭하면 됩니다. 다운로드한 파일의 SHA-256을 해당 릴리스 페이지의 `SHA256SUMS.txt`와 비교해 보세요.
 
 Windows 10 1809 이상과 Windows 11(64비트)을 지원합니다. 설정은 Windows 11에 포함된 Microsoft Edge WebView2를 사용합니다. 실행 파일은 아직 코드 서명되어 있지 않습니다. SmartScreen이 첫 실행을 차단하면 공식 릴리스를 다운로드했는지 확인한 뒤 **추가 정보 → 실행**을 선택하세요.
 

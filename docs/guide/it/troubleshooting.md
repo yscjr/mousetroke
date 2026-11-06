@@ -52,4 +52,4 @@ Desktop remoto, macchine virtuali e applicazioni 3D/giochi possono richiedere gl
 
 ## Segnalare un bug
 
-Usa **Informazioni → Commenti e suggerimenti → Apri** oppure [GitHub Issues](https://github.com/eiaao/mousetroke/issues). Includi la versione dell'app, la versione del sistema operativo, l'applicazione interessata, gesto e azione, risultato atteso e i passaggi per riprodurre. Allega il log pertinente da **Informazioni → Apri registro** e una configurazione esportata minimale se utile. Controlla gli allegati per testo privato, titoli di finestre, percorsi o argomenti di comando prima di condividerli.
+Usa **Informazioni → Commenti e suggerimenti → Apri** oppure [GitHub Issues](https://github.com/yscjr/mousetroke/issues). Includi la versione dell'app, la versione del sistema operativo, l'applicazione interessata, gesto e azione, risultato atteso e i passaggi per riprodurre. Allega il log pertinente da **Informazioni → Apri registro** e una configurazione esportata minimale se utile. Controlla gli allegati per testo privato, titoli di finestre, percorsi o argomenti di comando prima di condividerli.

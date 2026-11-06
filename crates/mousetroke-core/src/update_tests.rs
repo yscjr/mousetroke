@@ -147,7 +147,7 @@ fn api_check(latest: &str) -> Check {
     Check::from_release(
         Release {
             latest: latest.into(),
-            notes_url: "https://github.com/eiaao/mousetroke/releases/latest".into(),
+            notes_url: "https://github.com/yscjr/mousetroke/releases/latest".into(),
             body: "### English\n- API notes".into(),
             exe: "https://github.com/payload".into(),
             sums: "https://github.com/SHA256SUMS.txt".into(),
@@ -284,7 +284,7 @@ fn state_waits_twenty_four_hours_and_handles_clock_rollback() {
 #[test]
 fn mac_release_requires_exact_dmg_and_sums_and_rejects_untrusted_urls() {
     let mut value = serde_json::json!({"tag_name":"v1.2.3", "draft":false, "prerelease":false,
-        "html_url":"https://github.com/eiaao/mousetroke/releases/tag/v1.2.3", "assets":[
+        "html_url":"https://github.com/yscjr/mousetroke/releases/tag/v1.2.3", "assets":[
         {"name":"mousetroke.exe", "browser_download_url":"https://github.com/exe"},
         {"name":"Mousetroke.dmg", "browser_download_url":"https://github.com/mac"},
         {"name":"SHA256SUMS.txt", "browser_download_url":"https://github.com/sums"}]});

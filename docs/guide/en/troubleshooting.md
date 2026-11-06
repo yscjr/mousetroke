@@ -52,4 +52,4 @@ Remote desktop, virtual machines and 3D/game applications may need the same mous
 
 ## Report a bug
 
-Use **About → Feedback → Open** or [GitHub Issues](https://github.com/eiaao/mousetroke/issues). Include the app version, OS version, affected application, gesture and action, expected result and steps to reproduce. Attach the relevant log from **About → Open log** and a minimal exported configuration if useful. Review attachments for private text, window titles, paths or command arguments before sharing them.
+Use **About → Feedback → Open** or [GitHub Issues](https://github.com/yscjr/mousetroke/issues). Include the app version, OS version, affected application, gesture and action, expected result and steps to reproduce. Attach the relevant log from **About → Open log** and a minimal exported configuration if useful. Review attachments for private text, window titles, paths or command arguments before sharing them.

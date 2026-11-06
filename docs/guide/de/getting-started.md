@@ -8,7 +8,7 @@ order: 2
 
 ## Installieren und öffnen
 
-Unter Windows laden Sie `mousetroke.exe` von der [neuesten Veröffentlichung](https://github.com/eiaao/mousetroke/releases/latest) herunter. Es ist eine portable ausführbare Datei: Speichern Sie sie an einem dauerhaften Ort und starten Sie sie per Doppelklick. Vergleichen Sie den SHA-256 des Downloads mit `SHA256SUMS.txt` auf der Veröffentlichungsseite.
+Unter Windows laden Sie `mousetroke.exe` von der [neuesten Veröffentlichung](https://github.com/yscjr/mousetroke/releases/latest) herunter. Es ist eine portable ausführbare Datei: Speichern Sie sie an einem dauerhaften Ort und starten Sie sie per Doppelklick. Vergleichen Sie den SHA-256 des Downloads mit `SHA256SUMS.txt` auf der Veröffentlichungsseite.
 
 Unterstützt werden Windows 10 1809 und höher sowie Windows 11, 64-Bit. Die Einstellungen nutzen Microsoft Edge WebView2, das in Windows 11 enthalten ist. Die ausführbare Datei ist noch nicht codesigniert. Falls SmartScreen den ersten Start blockiert, wählen Sie **Weitere Informationen → Trotzdem ausführen**, nachdem Sie sich vergewissert haben, dass Sie die offizielle Veröffentlichung geladen haben.
 

@@ -51,7 +51,7 @@ fn environment_override_is_debug_only() {
     if let Some(value) = previous { std::env::set_var("MOUSETROKE_UPDATE_BASE", value); }
     else { std::env::remove_var("MOUSETROKE_UPDATE_BASE"); }
     if cfg!(debug_assertions) {
-        assert_eq!(source.api, "http://127.0.0.1:8770/fixture/repos/eiaao/mousetroke/releases/latest");
+        assert_eq!(source.api, "http://127.0.0.1:8770/fixture/repos/yscjr/mousetroke/releases/latest");
         assert_eq!(source.marker_url(), "http://127.0.0.1:8770/latest.txt");
         assert!(source.allowed("http://127.0.0.1:8770/exe", false));
     } else {
@@ -104,8 +104,8 @@ fn local_checks_download_verify_replace_and_rollback() {
                         _ => ("200 OK", "", b"v1.2.3\n"),
                     },
                     "/marker" => ("200 OK", "", b"v1.2.3\n"),
-                    "/repos/eiaao/mousetroke/releases/latest" if mode.load(Ordering::Acquire) == 7 => ("503 Service Unavailable", "", b""),
-                    "/repos/eiaao/mousetroke/releases/latest" => ("200 OK", "", &release_json),
+                    "/repos/yscjr/mousetroke/releases/latest" if mode.load(Ordering::Acquire) == 7 => ("503 Service Unavailable", "", b""),
+                    "/repos/yscjr/mousetroke/releases/latest" => ("200 OK", "", &release_json),
                     "/sums" => ("200 OK", "", &sums),
                     "/bad-sums" => ("200 OK", "", b"0000000000000000000000000000000000000000000000000000000000000000  mousetroke.exe"),
                     "/exe" => ("200 OK", "", data),
@@ -130,7 +130,7 @@ fn local_checks_download_verify_replace_and_rollback() {
     std::fs::write(&exe, b"original").unwrap();
     let source = Source::local(&origin).unwrap();
     let take_requests = || std::mem::take(&mut *requests.lock().unwrap());
-    let api_path = "/repos/eiaao/mousetroke/releases/latest";
+    let api_path = "/repos/yscjr/mousetroke/releases/latest";
     let manual = serde_json::to_value(check_source(&source, false).unwrap()).unwrap();
     assert_eq!(take_requests(), [api_path]);
     for mode in 0..=6 {

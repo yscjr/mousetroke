@@ -34,9 +34,10 @@ Under **Preferences → Recognition**:
 |---|---|
 | Hold-still time before treating it as a click | Default 500 ms; slider 150–1500 ms. Hold without movement for this long to pass through a normal click/drag. |
 | Stroke sensitivity | Default 30 px; slider 10–80 px. Smaller values recognize shorter strokes but make accidental gestures easier. |
+| Corner filtering | Default 50%; slider 0–100%. A short diagonal transition is ignored when it does not exceed this percentage of the shorter adjacent stroke. Set it to 0 to disable filtering; high values can remove intentional short diagonals. |
 | Gestures act on | Choose **the window under the cursor** (default) or **the active window**. |
 
-Under **Appearance**, **Show the trail**, **Trail width**, **Trail color**, **When recognized**, **Fade out when done**, **Show the gesture name while drawing** and **Gesture name color** control feedback. There is no shape-recognition threshold slider here.
+Under **Appearance**, **Show the trail**, **Trail width**, **Trail color**, **When recognized**, **Fade out when done**, **Show the gesture name while drawing** and **Gesture name color** control feedback. **Corner filtering** affects quantized transitions in directional gestures; it is not a shape-template recognition threshold.
 
 ## Find, copy and turn off
 

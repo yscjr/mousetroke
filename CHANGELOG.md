@@ -17,11 +17,13 @@ Each version lists its highlights in English, then in Chinese. The release page,
 ### English
 
 - Improved directional gesture recognition so short diagonal transition segments created by rounded hand-drawn corners are discarded instead of turning `↑→` into `↑↗→`.
+- Added a **Recognition → Corner filtering** slider (0–100%, default 50%); set it to 0 to disable rounded-corner transition filtering.
 - Fork builds check this repository for updates and publish a Windows release through GitHub Actions.
 
 ### 中文
 
 - 改进方向手势识别：手画转角时产生的短斜向过渡段会被忽略，不再把 `↑→` 误识别成 `↑↗→`。
+- 新增“识别 → 转角过滤”滑块（0–100%，默认 50%）；设为 0 可关闭圆角过渡过滤。
 - Fork 版本从本仓库检查更新，并通过 GitHub Actions 发布 Windows 版本。
 
 ## 0.2.2 — 2026-10-27

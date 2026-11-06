@@ -9,7 +9,7 @@ default-members = ["crates/mousetroke-core", "crates/mousetroke-engine", "crates
 version = "0.2.3"
 edition = "2021"
 license = "MIT"
-repository = "https://github.com/eiaao/mousetroke"
+repository = "https://github.com/yscjr/mousetroke"
 homepage = "https://mousetroke.com/"
 
 [workspace.dependencies]

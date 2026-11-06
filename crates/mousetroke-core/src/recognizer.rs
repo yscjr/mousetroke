@@ -14,6 +14,9 @@ pub struct Segment {
     pub y: i32,
 }
 
+/// 默认只过滤不超过两侧较短轴段 50% 的斜向过渡段。
+pub const DEFAULT_CORNER_FILTER_PERCENT: u32 = 50;
+
 /// 轨迹追踪器：增量喂入鼠标点，按 `grid`（px）量化为网格步数段，同向段合并。
 #[derive(Debug, Clone)]
 pub struct PathTracker {
@@ -65,6 +68,11 @@ impl PathTracker {
     pub fn strokes(&self) -> Vec<Segment> {
         denoise(&self.segments)
     }
+
+    /// 使用用户设置的拐角过滤阈值去噪。
+    pub fn strokes_with_corner_filter(&self, corner_filter_percent: u32) -> Vec<Segment> {
+        denoise_with_corner_filter(&self.segments, corner_filter_percent)
+    }
 }
 
 fn seg_len(s: &Segment) -> i32 {
@@ -78,8 +86,15 @@ fn seg_len(s: &Segment) -> i32 {
 ///
 /// 之后合并同象限的相邻段。
 pub fn denoise(segs: &[Segment]) -> Vec<Segment> {
+    denoise_with_corner_filter(segs, DEFAULT_CORNER_FILTER_PERCENT)
+}
+
+/// `corner_filter_percent` 是斜向过渡段相对两侧较短轴段的最大百分比。
+/// 0 表示关闭拐角过滤；大于 100 的值按 100 处理。
+pub fn denoise_with_corner_filter(segs: &[Segment], corner_filter_percent: u32) -> Vec<Segment> {
     let longest = segs.iter().map(seg_len).max().unwrap_or(0);
     let n = segs.len();
+    let corner_filter_percent = corner_filter_percent.min(100) as i32;
     let mut kept: Vec<Segment> = Vec::with_capacity(n);
     for (i, s) in segs.iter().enumerate() {
         let hook = seg_len(s) == 1 && n > 1 && (i == 0 || i == n - 1) && longest >= 4;
@@ -87,9 +102,11 @@ pub fn denoise(segs: &[Segment]) -> Vec<Segment> {
             let (p, q) = (&segs[i - 1], &segs[i + 1]);
             let from = |a: i32, b: i32| a.signum() == b.signum() && b != 0;
             let neighbors_are_axial = (p.x == 0 || p.y == 0) && (q.x == 0 || q.y == 0);
-            let shorter_than_half = seg_len(s) <= (seg_len(p).min(seg_len(q)) / 2).max(1);
+            let shorter_neighbor = seg_len(p).min(seg_len(q));
+            let shorter_than_threshold = corner_filter_percent > 0
+                && seg_len(s) <= ((shorter_neighbor * corner_filter_percent / 100).max(1));
             neighbors_are_axial
-                && shorter_than_half
+                && shorter_than_threshold
                 && ((from(s.x, p.x) && from(s.y, q.y)) || (from(s.y, p.y) && from(s.x, q.x)))
         };
         if hook || corner {
@@ -280,6 +297,14 @@ mod tests {
         assert_eq!(
             denoise(&[s(0, -3), s(2, -2), s(3, 0)]),
             vec![s(0, -3), s(2, -2), s(3, 0)]
+        );
+        assert_eq!(
+            denoise_with_corner_filter(&[s(0, -6), s(2, -2), s(6, 0)], 0),
+            vec![s(0, -6), s(2, -2), s(6, 0)]
+        );
+        assert_eq!(
+            denoise_with_corner_filter(&[s(0, -6), s(2, -2), s(6, 0)], 100),
+            vec![s(0, -6), s(6, 0)]
         );
         assert_eq!(denoise(&[s(1, 0), s(0, -5), s(-1, 0)]), vec![s(0, -5)]);
         // 真实的短段（不是斜向过渡）保留

@@ -52,4 +52,4 @@ Remotedesktop, virtuelle Maschinen und 3D-/Spielanwendungen können dieselben Ma
 
 ## Einen Fehler melden
 
-Verwenden Sie **Über → Feedback → Öffnen** oder [GitHub Issues](https://github.com/eiaao/mousetroke/issues). Geben Sie die App-Version, die Betriebssystemversion, die betroffene Anwendung, Geste und Aktion, das erwartete Ergebnis und die Schritte zum Reproduzieren an. Hängen Sie bei Bedarf das einschlägige Protokoll aus **Über → Protokoll öffnen** und eine minimale exportierte Konfiguration an. Prüfen Sie Anhänge vor dem Teilen auf privaten Text, Fenstertitel, Pfade oder Befehlsargumente.
+Verwenden Sie **Über → Feedback → Öffnen** oder [GitHub Issues](https://github.com/yscjr/mousetroke/issues). Geben Sie die App-Version, die Betriebssystemversion, die betroffene Anwendung, Geste und Aktion, das erwartete Ergebnis und die Schritte zum Reproduzieren an. Hängen Sie bei Bedarf das einschlägige Protokoll aus **Über → Protokoll öffnen** und eine minimale exportierte Konfiguration an. Prüfen Sie Anhänge vor dem Teilen auf privaten Text, Fenstertitel, Pfade oder Befehlsargumente.
