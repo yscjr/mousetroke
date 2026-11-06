@@ -49,8 +49,8 @@ pub fn parse_url(text: &str) -> Option<Url<'_>> {
     })
 }
 
-pub const RELEASES_URL: &str = "https://github.com/eiaao/mousetroke/releases/latest";
-pub const API: &str = "https://api.github.com/repos/eiaao/mousetroke/releases/latest";
+pub const RELEASES_URL: &str = "https://github.com/yscjr/mousetroke/releases/latest";
+pub const API: &str = "https://api.github.com/repos/yscjr/mousetroke/releases/latest";
 pub const MARKER_CAP: usize = 64;
 pub const DAY: u64 = 24 * 60 * 60;
 
@@ -148,7 +148,7 @@ impl Source {
             return None;
         }
         Some(Self {
-            api: format!("{base}/repos/eiaao/mousetroke/releases/latest"),
+            api: format!("{base}/repos/yscjr/mousetroke/releases/latest"),
             local: Some(format!("http://{authority}")),
         })
     }

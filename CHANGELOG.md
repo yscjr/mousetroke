@@ -12,6 +12,18 @@ Each version lists its highlights in English, then in Chinese. The release page,
 
 - 自动更新检查先读取小型 `latest.txt` 版本标记，再查询 GitHub 发布信息；始终以发布 API 为准，手动检查仍只请求 API。
 
+## 0.2.3 — 2026-11-06
+
+### English
+
+- Improved directional gesture recognition so short diagonal transition segments created by rounded hand-drawn corners are discarded instead of turning `↑→` into `↑↗→`.
+- Fork builds check this repository for updates and publish a Windows release through GitHub Actions.
+
+### 中文
+
+- 改进方向手势识别：手画转角时产生的短斜向过渡段会被忽略，不再把 `↑→` 误识别成 `↑↗→`。
+- Fork 版本从本仓库检查更新，并通过 GitHub Actions 发布 Windows 版本。
+
 ## 0.2.2 — 2026-10-27
 
 ### English

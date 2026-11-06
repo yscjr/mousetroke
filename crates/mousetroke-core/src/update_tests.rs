@@ -126,7 +126,7 @@ fn marker_url_uses_release_download_or_local_origin_without_changing_api() {
     assert_eq!(source.api, API);
     assert_eq!(
         source.marker_url(),
-        "https://github.com/eiaao/mousetroke/releases/latest/download/latest.txt"
+        "https://github.com/yscjr/mousetroke/releases/latest/download/latest.txt"
     );
     assert!(source.allowed(&source.marker_url(), false));
     for base in ["http://127.0.0.1:8770", "http://127.0.0.1:8770/fixture/"] {
@@ -135,7 +135,7 @@ fn marker_url_uses_release_download_or_local_origin_without_changing_api() {
         assert_eq!(
             source.api,
             format!(
-                "{}/repos/eiaao/mousetroke/releases/latest",
+                "{}/repos/yscjr/mousetroke/releases/latest",
                 base.trim_end_matches('/')
             )
         );

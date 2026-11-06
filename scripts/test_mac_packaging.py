@@ -741,7 +741,7 @@ class UpdateFixtureTests(unittest.TestCase):
                                     (["--exe", exe, "--dmg", dmg], {"mousetroke.exe": exe, "Mousetroke.dmg": dmg})]:
                 with self.subTest(options=options):
                     get = self.fixture(*options, "--version", "1.2.3")
-                    release = json.loads(get("/repos/eiaao/mousetroke/releases/latest"))
+                    release = json.loads(get("/repos/yscjr/mousetroke/releases/latest"))
                     self.assertEqual(release["tag_name"], "v1.2.3")
                     self.assertEqual({a["name"] for a in release["assets"]}, set(assets) | {"latest.txt", "SHA256SUMS.txt"})
                     self.assertEqual(get("/latest.txt"), marker)
@@ -764,7 +764,7 @@ class UpdateFixtureTests(unittest.TestCase):
                                     (["--marker-version", "4.5.6"], b"v4.5.6\n")]:
                 with self.subTest(options=options):
                     get = self.fixture("--exe", exe, "--version", "1.2.3", *options)
-                    release = json.loads(get("/repos/eiaao/mousetroke/releases/latest"))
+                    release = json.loads(get("/repos/yscjr/mousetroke/releases/latest"))
                     self.assertEqual(release["tag_name"], "v1.2.3")
                     self.assertEqual(get("/latest.txt", status=404 if marker is None else 200), marker or b"")
                     expected = {"mousetroke.exe": exe.read_bytes()}

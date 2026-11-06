@@ -72,7 +72,8 @@ fn seg_len(s: &Segment) -> i32 {
 }
 
 /// 去除手抖产生的噪声段：
-/// - 拐角过渡：1 格的斜段夹在两段 ≥2 格之间，且其 x/y 方向分别来自前后两段（如 ← ↖ ↑ 中的 ↖）
+/// - 拐角过渡：较短的斜段夹在两段轴向段之间，且其 x/y 方向分别来自前后两段
+///   （如 ← ↖ ↑ 中的 ↖）。允许弧形转角占较短一侧相邻段的一半以内。
 /// - 首尾钩子：起笔/收笔处 1 格的小段（最长段 ≥4 格时）
 ///
 /// 之后合并同象限的相邻段。
@@ -81,18 +82,18 @@ pub fn denoise(segs: &[Segment]) -> Vec<Segment> {
     let n = segs.len();
     let mut kept: Vec<Segment> = Vec::with_capacity(n);
     for (i, s) in segs.iter().enumerate() {
-        if seg_len(s) == 1 && n > 1 {
-            let hook = (i == 0 || i == n - 1) && longest >= 4;
-            let corner = i > 0 && i + 1 < n && s.x != 0 && s.y != 0 && {
-                let (p, q) = (&segs[i - 1], &segs[i + 1]);
-                let from = |a: i32, b: i32| a.signum() == b.signum() && b != 0;
-                seg_len(p) >= 2
-                    && seg_len(q) >= 2
-                    && ((from(s.x, p.x) && from(s.y, q.y)) || (from(s.y, p.y) && from(s.x, q.x)))
-            };
-            if hook || corner {
-                continue;
-            }
+        let hook = seg_len(s) == 1 && n > 1 && (i == 0 || i == n - 1) && longest >= 4;
+        let corner = i > 0 && i + 1 < n && s.x != 0 && s.y != 0 && {
+            let (p, q) = (&segs[i - 1], &segs[i + 1]);
+            let from = |a: i32, b: i32| a.signum() == b.signum() && b != 0;
+            let neighbors_are_axial = (p.x == 0 || p.y == 0) && (q.x == 0 || q.y == 0);
+            let shorter_than_half = seg_len(s) <= (seg_len(p).min(seg_len(q)) / 2).max(1);
+            neighbors_are_axial
+                && shorter_than_half
+                && ((from(s.x, p.x) && from(s.y, q.y)) || (from(s.y, p.y) && from(s.x, q.x)))
+        };
+        if hook || corner {
+            continue;
         }
         match kept.last_mut() {
             Some(last) if last.x.signum() == s.x.signum() && last.y.signum() == s.y.signum() => {
@@ -273,6 +274,13 @@ mod tests {
     fn denoise_corner_and_hooks() {
         let s = |x, y| Segment { x, y };
         assert_eq!(denoise(&[s(-6, 0), s(-1, -1), s(0, -6), s(6, 0)]), vec![s(-6, 0), s(0, -6), s(6, 0)]);
+        // 弧形转角可能连续超过一格；只要明显短于两侧轴向段，仍视为过渡。
+        assert_eq!(denoise(&[s(0, -6), s(2, -2), s(6, 0)]), vec![s(0, -6), s(6, 0)]);
+        // 有实际长度的斜向段不能被吞掉。
+        assert_eq!(
+            denoise(&[s(0, -3), s(2, -2), s(3, 0)]),
+            vec![s(0, -3), s(2, -2), s(3, 0)]
+        );
         assert_eq!(denoise(&[s(1, 0), s(0, -5), s(-1, 0)]), vec![s(0, -5)]);
         // 真实的短段（不是斜向过渡）保留
         assert_eq!(denoise(&[s(0, 3), s(1, 0), s(0, 3)]).len(), 3);

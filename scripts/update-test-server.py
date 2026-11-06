@@ -50,7 +50,7 @@ def main():
         release["assets"].append({"name": name, "browser_download_url": f"{origin}/{name}"})
         bodies[f"/{name}"] = payload
         sums.append(f"{digest} *{name}\n")
-    bodies["/repos/eiaao/mousetroke/releases/latest"] = json.dumps(release).encode()
+    bodies["/repos/yscjr/mousetroke/releases/latest"] = json.dumps(release).encode()
     bodies["/SHA256SUMS.txt"] = "".join(sums).encode()
 
     class Handler(BaseHTTPRequestHandler):

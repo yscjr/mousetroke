@@ -56,7 +56,7 @@ fn environment_override_is_debug_only() {
         assert!(source.allowed("http://127.0.0.1:8770/exe", false));
     } else {
         assert_eq!(source.api, API);
-        assert_eq!(source.marker_url(), "https://github.com/eiaao/mousetroke/releases/latest/download/latest.txt");
+        assert_eq!(source.marker_url(), "https://github.com/yscjr/mousetroke/releases/latest/download/latest.txt");
         assert!(!source.allowed("http://127.0.0.1:8770/exe", false));
     }
 }
