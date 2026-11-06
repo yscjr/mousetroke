@@ -12,6 +12,16 @@ Each version lists its highlights in English, then in Chinese. The release page,
 
 - 自动更新检查先读取小型 `latest.txt` 版本标记，再查询 GitHub 发布信息；始终以发布 API 为准，手动检查仍只请求 API。
 
+## 0.2.4 — 2026-11-06
+
+### English
+
+- Directional gestures now merge only segments in the same quantized direction. Near-horizontal and near-vertical sections that share the same quadrant are no longer combined into a diagonal, so `↑ → ↑` stays `↑ → ↑`.
+
+### 中文
+
+- 方向手势现在只合并量化方向相同的相邻段。同属右上象限但分别接近水平、接近竖直的线段不再被合并成斜线，因此 `↑ → ↑` 会保持为 `↑ → ↑`。
+
 ## 0.2.3 — 2026-11-06
 
 ### English

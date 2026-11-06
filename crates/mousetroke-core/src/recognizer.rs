@@ -46,12 +46,13 @@ impl PathTracker {
         if sx == 0 && sy == 0 {
             return;
         }
+        let next = Segment { x: sx, y: sy };
         match self.segments.last_mut() {
-            Some(last) if last.x.signum() == sx.signum() && last.y.signum() == sy.signum() => {
-                last.x += sx;
-                last.y += sy;
+            Some(last) if snap_direction(last) == snap_direction(&next) => {
+                last.x += next.x;
+                last.y += next.y;
             }
-            _ => self.segments.push(Segment { x: sx, y: sy }),
+            _ => self.segments.push(next),
         }
         self.anchor = (x, y);
     }
@@ -79,12 +80,25 @@ fn seg_len(s: &Segment) -> i32 {
     s.x.abs().max(s.y.abs())
 }
 
+/// 按 8 方向吸附：次轴小于主轴 × tan22.5° 时视为纯轴向。
+fn snap_direction(s: &Segment) -> (i32, i32) {
+    let (ax, ay) = (s.x.abs() as f64, s.y.abs() as f64);
+    let tan = std::f64::consts::FRAC_PI_8.tan();
+    if ay < ax * tan {
+        (s.x.signum(), 0)
+    } else if ax < ay * tan {
+        (0, s.y.signum())
+    } else {
+        (s.x.signum(), s.y.signum())
+    }
+}
+
 /// 去除手抖产生的噪声段：
 /// - 拐角过渡：较短的斜段夹在两段轴向段之间，且其 x/y 方向分别来自前后两段
 ///   （如 ← ↖ ↑ 中的 ↖）。允许弧形转角占较短一侧相邻段的一半以内。
 /// - 首尾钩子：起笔/收笔处 1 格的小段（最长段 ≥4 格时）
 ///
-/// 之后合并同象限的相邻段。
+/// 之后仅合并量化方向相同的相邻段。
 pub fn denoise(segs: &[Segment]) -> Vec<Segment> {
     denoise_with_corner_filter(segs, DEFAULT_CORNER_FILTER_PERCENT)
 }
@@ -101,7 +115,9 @@ pub fn denoise_with_corner_filter(segs: &[Segment], corner_filter_percent: u32) 
         let corner = i > 0 && i + 1 < n && s.x != 0 && s.y != 0 && {
             let (p, q) = (&segs[i - 1], &segs[i + 1]);
             let from = |a: i32, b: i32| a.signum() == b.signum() && b != 0;
-            let neighbors_are_axial = (p.x == 0 || p.y == 0) && (q.x == 0 || q.y == 0);
+            let (px, py) = snap_direction(p);
+            let (qx, qy) = snap_direction(q);
+            let neighbors_are_axial = (px == 0 || py == 0) && (qx == 0 || qy == 0);
             let shorter_neighbor = seg_len(p).min(seg_len(q));
             let shorter_than_threshold = corner_filter_percent > 0
                 && seg_len(s) <= ((shorter_neighbor * corner_filter_percent / 100).max(1));
@@ -113,7 +129,7 @@ pub fn denoise_with_corner_filter(segs: &[Segment], corner_filter_percent: u32) 
             continue;
         }
         match kept.last_mut() {
-            Some(last) if last.x.signum() == s.x.signum() && last.y.signum() == s.y.signum() => {
+            Some(last) if snap_direction(last) == snap_direction(s) => {
                 last.x += s.x;
                 last.y += s.y;
             }
@@ -126,18 +142,9 @@ pub fn denoise_with_corner_filter(segs: &[Segment], corner_filter_percent: u32) 
 /// 笔画的方向箭头表示（如 `→ ↓ →`），用于屏幕上"未识别"提示。
 /// 每段按 8 方向吸附（次轴 < 主轴×tan22.5° 视为纯轴向）。
 pub fn arrows(segs: &[Segment]) -> String {
-    let tan = std::f64::consts::FRAC_PI_8.tan();
     segs.iter()
         .map(|s| {
-            let (ax, ay) = (s.x.abs() as f64, s.y.abs() as f64);
-            let (x, y) = if ay < ax * tan {
-                (s.x.signum(), 0)
-            } else if ax < ay * tan {
-                (0, s.y.signum())
-            } else {
-                (s.x.signum(), s.y.signum())
-            };
-            match (x, y) {
+            match snap_direction(s) {
                 (1, 0) => '→',
                 (-1, 0) => '←',
                 (0, -1) => '↑',
@@ -237,20 +244,9 @@ pub fn record_points(raw: &[(f64, f64)], grid: f64) -> Vec<i32> {
     for &(x, y) in &raw[1..] {
         t.add_point(x, y);
     }
-    let snap = |s: &Segment| -> (i32, i32) {
-        let (ax, ay) = (s.x.abs() as f64, s.y.abs() as f64);
-        let tan = std::f64::consts::FRAC_PI_8.tan(); // 22.5°
-        if ay < ax * tan {
-            (s.x.signum(), 0)
-        } else if ax < ay * tan {
-            (0, s.y.signum())
-        } else {
-            (s.x.signum(), s.y.signum())
-        }
-    };
     let mut dirs: Vec<(i32, i32)> = Vec::new();
     for s in t.strokes() {
-        let d = snap(&s);
+        let d = snap_direction(&s);
         if dirs.last() != Some(&d) {
             dirs.push(d);
         }
@@ -284,7 +280,34 @@ mod tests {
         let s = |x, y| Segment { x, y };
         assert_eq!(arrows(&[s(5, 0), s(1, 6), s(4, 0)]), "→ ↓ →");
         assert_eq!(arrows(&[s(-3, -3), s(0, -2)]), "↖ ↑");
+        assert_eq!(arrows(&[s(3, -1), s(1, -2)]), "→ ↑");
         assert_eq!(arrows(&[]), "");
+    }
+
+    #[test]
+    fn same_quadrant_near_axis_turns_stay_separate() {
+        let segs = denoise(&[Segment { x: 3, y: -1 }, Segment { x: 1, y: -2 }]);
+        assert_eq!(
+            segs,
+            vec![Segment { x: 3, y: -1 }, Segment { x: 1, y: -2 }]
+        );
+        assert_eq!(arrows(&segs), "→ ↑");
+
+        let tracked = tracker(&[(0.0, 0.0), (90.0, -24.0), (110.0, -90.0)]);
+        assert_eq!(
+            tracked,
+            vec![Segment { x: 3, y: -1 }, Segment { x: 1, y: -2 }]
+        );
+        assert_eq!(arrows(&tracked), "→ ↑");
+
+        let tracked = tracker(&[
+            (0.0, 0.0),
+            (0.0, -100.0),
+            (90.0, -124.0),
+            (110.0, -190.0),
+            (110.0, -260.0),
+        ]);
+        assert_eq!(arrows(&denoise(&tracked)), "↑ → ↑");
     }
 
     #[test]
