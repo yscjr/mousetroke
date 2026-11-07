@@ -80,17 +80,21 @@ fn seg_len(s: &Segment) -> i32 {
     s.x.abs().max(s.y.abs())
 }
 
-/// 按 8 方向吸附：次轴小于主轴 × tan22.5° 时视为纯轴向。
-fn snap_direction(s: &Segment) -> (i32, i32) {
-    let (ax, ay) = (s.x.abs() as f64, s.y.abs() as f64);
+fn snap_components(x: i32, y: i32) -> (i32, i32) {
+    let (ax, ay) = (x.abs() as f64, y.abs() as f64);
     let tan = std::f64::consts::FRAC_PI_8.tan();
     if ay < ax * tan {
-        (s.x.signum(), 0)
+        (x.signum(), 0)
     } else if ax < ay * tan {
-        (0, s.y.signum())
+        (0, y.signum())
     } else {
-        (s.x.signum(), s.y.signum())
+        (x.signum(), y.signum())
     }
+}
+
+/// 按 8 方向吸附：次轴小于主轴 × tan22.5° 时视为纯轴向。
+fn snap_direction(s: &Segment) -> (i32, i32) {
+    snap_components(s.x, s.y)
 }
 
 /// 去除手抖产生的噪声段：
@@ -183,11 +187,15 @@ pub fn match_polyline(points: &[i32], segments: &[Segment]) -> Option<f64> {
     for i in 0..expected_len {
         let ex = (points[(i + 1) * 2] - points[i * 2]) / 50;
         let ey = (points[(i + 1) * 2 + 1] - points[i * 2 + 1]) / 50;
-        expected.push((ex as f64, ey as f64));
+        expected.push((ex, ey));
     }
+    let same_directions = expected
+        .iter()
+        .zip(segments)
+        .all(|((ex, ey), seg)| snap_components(*ex, *ey) == snap_direction(seg));
     // 按段主轴长度（L∞）归一化：既能容忍划得长/短，又能区分 ← 与 ↙
     let linf = |x: f64, y: f64| x.abs().max(y.abs());
-    let exp_total: f64 = expected.iter().map(|(x, y)| linf(*x, *y)).sum();
+    let exp_total: f64 = expected.iter().map(|(x, y)| linf(*x as f64, *y as f64)).sum();
     let act_total: f64 = segments.iter().map(|s| linf(s.x as f64, s.y as f64)).sum();
     if exp_total <= 0.0 || act_total <= 0.0 {
         return None;
@@ -195,18 +203,25 @@ pub fn match_polyline(points: &[i32], segments: &[Segment]) -> Option<f64> {
     let scale = exp_total / act_total;
     let mut score = 0.0;
     for (i, (ex, ey)) in expected.iter().enumerate() {
+        let (ex, ey) = (*ex as f64, *ey as f64);
         let seg = segments[i];
         let (sx, sy) = (seg.x as f64 * scale, seg.y as f64 * scale);
         score += (ex - sx).abs() + (ey - sy).abs();
         // 方向相反：重罚（除非实际分量几乎为零）
-        if *ex != 0.0 && sx.signum() != *ex && sx.abs() > 0.35 {
+        if ex != 0.0 && sx.signum() != ex.signum() && sx.abs() > 0.35 {
             score += 1.5;
         }
-        if *ey != 0.0 && sy.signum() != *ey && sy.abs() > 0.35 {
+        if ey != 0.0 && sy.signum() != ey.signum() && sy.abs() > 0.35 {
             score += 1.5;
         }
     }
-    Some(score)
+    // 界面上已经显示同一组方向箭头时，各段长度比例只用于候选排序，
+    // 不应把明显画长或画短的同一手势判为未识别。
+    Some(if same_directions {
+        (score * 0.05).min(EXACT_EPS * 0.75)
+    } else {
+        score
+    })
 }
 
 /// 从多个候选中选最佳匹配：先找精确匹配（0 分），否则取唯一的最小分（≤ 1）。
@@ -442,6 +457,20 @@ mod tests {
         // 纯左划 (−1,0) 与 ↙ 有分差（1 分）——由 best_score 的"唯一最优"规则控制误匹配
         let s = match_polyline(&[50, 0, 0, 50], &[Segment { x: -1, y: 0 }]).unwrap();
         assert!((EXACT_EPS..=ACCEPT_MAX).contains(&s), "实际 {s}");
+    }
+
+    #[test]
+    fn same_direction_sequence_tolerates_different_segment_lengths() {
+        // 置顶默认轨迹 ↑→↑，允许两段竖线明显长于中间横线。
+        let points = [0, 100, 0, 50, 50, 50, 50, 0];
+        let segs = [
+            Segment { x: 0, y: -8 },
+            Segment { x: 2, y: 0 },
+            Segment { x: 0, y: -4 },
+        ];
+        let score = match_polyline(&points, &segs).unwrap();
+        assert!(score < EXACT_EPS, "实际 {score}");
+        assert_eq!(best_score(&[(&points, &segs)]).map(|(i, _)| i), Some(0));
     }
 
     #[test]

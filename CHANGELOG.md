@@ -12,6 +12,16 @@ Each version lists its highlights in English, then in Chinese. The release page,
 
 - 自动更新检查先读取小型 `latest.txt` 版本标记，再查询 GitHub 发布信息；始终以发布 API 为准，手动检查仍只请求 API。
 
+## 0.2.7 — 2026-11-07
+
+### English
+
+- Directional traces with the same 8-direction sequence now tolerate large differences in segment length. A hand-drawn `↑ → ↑` no longer becomes unrecognized merely because the vertical sections are longer than the horizontal section; relative lengths remain a small tie-breaker.
+
+### 中文
+
+- 具有相同 8 方向序列的轨迹现在允许各段长度差异较大。手画 `↑ → ↑` 不会仅因两段竖线比中间横线长而被判为未识别，各段比例只作为轻微排序依据。
+
 ## 0.2.6 — 2026-11-07
 
 ### English

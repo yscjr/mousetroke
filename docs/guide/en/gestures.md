@@ -26,6 +26,8 @@ For example, start with the right button and add a left click, or add wheel-up t
 
 For directional gestures, **Run as soon as recognized** runs without waiting for release. It suits repeated wheel actions. Shapes always wait for release. **Don’t show the gesture name while drawing** hides the name for that binding.
 
+Directional traces match by their 8-direction sequence, with relative segment lengths used only as a small tie-breaker. Individual segments in the same gesture may be drawn longer or shorter.
+
 ## Recognition and appearance
 
 Under **Preferences → Recognition**:
