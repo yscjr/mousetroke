@@ -735,8 +735,8 @@ fn live_label_refreshes_when_the_last_segment_changes_direction() {
     assert_ne!(t.e.live_label.as_deref(), Some("four_turns"));
 
     let segment_count = t.e.tracker.segments().len();
-    t.to(1_110, 540);
-    assert_eq!(t.e.tracker.segments().len(), segment_count);
+    t.to(870, 600);
+    assert_eq!(t.e.tracker.segments().len(), segment_count + 1);
     assert_eq!(t.e.live_label.as_deref(), Some("four_turns"));
 }
 
