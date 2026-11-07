@@ -703,6 +703,23 @@ fn stroke_at_segment_limit_still_matches_on_release() {
 }
 
 #[test]
+fn mouse_up_position_contributes_the_final_segment() {
+    let mut cfg = config(false);
+    cfg.scopes[0].bindings.push(bind(
+        "release_turn",
+        vec![RIGHT, trace(&[0, 0, 50, 0, 50, 50])],
+    ));
+    let mut t = T::with_config(cfg);
+    t.down(B::Right);
+    t.to(1_080, 540);
+    // 模拟最后一次移动和抬起之间没有 MouseMove。
+    t.pos = (1_080, 660);
+    assert_eq!(t.up(B::Right), Verdict::Swallow);
+    assert_eq!(t.executed(), ["release_turn"]);
+    assert!(t.replays().is_empty());
+}
+
+#[test]
 fn overlong_edge_rubbing_ends_and_stays_disarmed_until_leaving() {
     let mut cfg = config(false);
     cfg.scopes[0].bindings.push(bind("rub", vec![Step::Edge { edge: TOP }, trace(&[0, 0, 50, 0, 0, 0])]));

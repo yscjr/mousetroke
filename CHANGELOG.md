@@ -12,6 +12,16 @@ Each version lists its highlights in English, then in Chinese. The release page,
 
 - 自动更新检查先读取小型 `latest.txt` 版本标记，再查询 GitHub 发布信息；始终以发布 API 为准，手动检查仍只请求 API。
 
+## 0.2.5 — 2026-11-07
+
+### English
+
+- Mouse-up coordinates now contribute to the gesture before recognition. Fast final moves no longer lose the last segment when Windows sends no separate move event before release.
+
+### 中文
+
+- 鼠标抬起坐标现在会先加入手势轨迹再识别。Windows 若在抬起前没有单独的移动事件，快速移动形成的最后一段也不会再丢失。
+
 ## 0.2.4 — 2026-11-06
 
 ### English

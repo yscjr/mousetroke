@@ -410,7 +410,7 @@ impl Engine {
         }
         match ev {
             InputEvent::MouseDown { btn, x, y } => self.on_mouse_down(btn, x, y),
-            InputEvent::MouseUp { btn, .. } => self.on_mouse_up(btn),
+            InputEvent::MouseUp { btn, x, y } => self.on_mouse_up(btn, x, y),
             InputEvent::MouseMove { x, y } => self.on_mouse_move(x, y),
             InputEvent::Wheel(delta) => self.on_wheel(delta),
             InputEvent::KeyDown(vk) => self.on_key_down(vk),
@@ -500,7 +500,7 @@ impl Engine {
         }
     }
 
-    fn on_mouse_up(&mut self, btn: MouseButton) -> Verdict {
+    fn on_mouse_up(&mut self, btn: MouseButton, x: i32, y: i32) -> Verdict {
         let Some(cap) = &mut self.capture else {
             return Verdict::Pass;
         };
@@ -522,6 +522,11 @@ impl Engine {
                         }
                         None => Verdict::Pass,
                     };
+                }
+                // 抬起事件也携带终点；最后一次快速移动可能没有单独的 MouseMove。
+                // 先补录终点，避免多段手势稳定丢掉最后一段。
+                if cap.state == CaptureState::Active {
+                    self.track(x, y, true);
                 }
                 let cap = self.capture.take().unwrap();
                 if cap.state == CaptureState::Active {
