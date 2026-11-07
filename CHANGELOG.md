@@ -12,6 +12,16 @@ Each version lists its highlights in English, then in Chinese. The release page,
 
 - 自动更新检查先读取小型 `latest.txt` 版本标记，再查询 GitHub 发布信息；始终以发布 API 为准，手动检查仍只请求 API。
 
+## 0.2.6 — 2026-11-07
+
+### English
+
+- Live gesture hints now refresh when extending the last segment changes its quantized direction, even if no new raw segment is created. The final `←` in `↑ → ↓ ←` appears immediately while the gesture is still held.
+
+### 中文
+
+- 延长最后一段导致量化方向变化时，即使没有新增原始分段，实时手势提示也会立即刷新。按住手势时，`↑ → ↓ ←` 的最后 `←` 会直接出现，不再等到截图快捷键等额外输入后才更新。
+
 ## 0.2.5 — 2026-11-07
 
 ### English

@@ -720,6 +720,27 @@ fn mouse_up_position_contributes_the_final_segment() {
 }
 
 #[test]
+fn live_label_refreshes_when_the_last_segment_changes_direction() {
+    let mut cfg = config(false);
+    cfg.scopes[0].bindings.push(bind(
+        "four_turns",
+        vec![RIGHT, trace(&[0, 50, 0, 0, 50, 0, 50, 50, 0, 50])],
+    ));
+    let mut t = T::with_config(cfg);
+    t.down(B::Right);
+    t.to(960, 300);
+    t.to(1_200, 300);
+    t.to(1_200, 540);
+    t.to(1_170, 570);
+    assert_ne!(t.e.live_label.as_deref(), Some("four_turns"));
+
+    let segment_count = t.e.tracker.segments().len();
+    t.to(1_110, 540);
+    assert_eq!(t.e.tracker.segments().len(), segment_count);
+    assert_eq!(t.e.live_label.as_deref(), Some("four_turns"));
+}
+
+#[test]
 fn overlong_edge_rubbing_ends_and_stays_disarmed_until_leaving() {
     let mut cfg = config(false);
     cfg.scopes[0].bindings.push(bind("rub", vec![Step::Edge { edge: TOP }, trace(&[0, 0, 50, 0, 0, 0])]));

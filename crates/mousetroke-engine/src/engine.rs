@@ -832,23 +832,33 @@ impl Engine {
 
     /// 轨迹追踪；分段变化时重新匹配。
     fn track(&mut self, x: i32, y: i32, draw: bool) {
-        let before = self.tracker.segments().len();
+        let before_len = self.tracker.segments().len();
+        let before_directions = recognizer::arrows(
+            &self.tracker.strokes_with_corner_filter(self.cfg.settings.corner_filter_percent),
+        );
         self.tracker.add_point(x as f64, y as f64);
-        let after = self.tracker.segments().len();
-        if after > MAX_STROKE_SEGMENTS {
+        let after_len = self.tracker.segments().len();
+        if after_len > MAX_STROKE_SEGMENTS {
             self.cancel_long_stroke();
             return;
         }
+        let after_directions = recognizer::arrows(
+            &self.tracker.strokes_with_corner_filter(self.cfg.settings.corner_filter_percent),
+        );
         self.record_point(x, y);
         // 手抖不画轨迹：超过点击容差后才开始画（第一笔从按下点连过来）
         let shown = self.capture.as_ref().is_some_and(|c| c.show_trail);
         if draw && shown && self.cfg.settings.trail.show {
             self.overlay.line_to(x, y);
         }
-        if after != before {
+        if after_len != before_len {
             if let Some(cap) = &mut self.capture {
                 cap.trace_at.get_or_insert(cap.presses.len());
             }
+        }
+        // 延长最后一段时原始段数不变，但 8 方向分类或拐角过滤结果可能改变；
+        // 此时也必须刷新实时提示，否则会一直显示旧方向，直到下一次其他输入。
+        if after_len != before_len || after_directions != before_directions {
             self.after_input();
         }
     }
